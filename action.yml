@@ -71,17 +71,22 @@ runs:
             $config = $matches['config']
             $logContent = Get-Content $log
 
+            $gccRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[-.*\]$'
+            $clangRegex = $gccRegex
+            $msvcRegex = '^.*\((\d+|\d+,\d+|\d+,\d+,\d+,\d+)\)\s*:\s+warning\s+\w{1,2}\d+\s*:\s*.*$'
+            $clangClRegex = '^.*\(\d+,\d+\):\s+warning:\s+.*\[-.*\]$'
+            $clangTidyRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[[^-].*\]$'
             switch ($compiler) {
-              "gcc" { $compilerRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[-.*\]$' }
-              "clang" { $compilerRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[-.*\]$' }
-              "msvc" { $compilerRegex = '^.*\((\d+|\d+,\d+|\d+,\d+,\d+,\d+)\)\s*:\s+warning\s+\w{1,2}\d+\s*:\s*.*$' }
-              "clang-cl" { $compilerRegex = '^.*\(\d+,\d+\):\s+warning:\s+.*\[-.*\]$' }
+              "gcc" { $compilerRegex = $gccRegex }
+              "clang" { $compilerRegex = $clangRegex }
+              "msvc" { $compilerRegex = $msvcRegex }
+              "clang-cl" { $compilerRegex = $clangClRegex }
+              "clangcl" { $compilerRegex = $clangClRegex }
               default {
                 Write-Output "Unknown compiler: $compiler"
                 continue
               }
             }
-            $clangTidyRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[[^-].*\]$'
 
             $nWarnings = ($logContent -match $compilerRegex).Count
             if (${{ env.INCLUDE_CLANG_TIDY_WARNINGS}}) {
