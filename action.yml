@@ -1,0 +1,125 @@
+name: report-warnings
+description: Count warnings and report the results in different formats
+author: Patrick Kappl
+
+inputs:
+  build-logs:
+    required: true
+    description: >-
+      Paths to the build logs. Multiple paths must be separated by a newline. The filenames of the
+      logs must follow the format: `<compiler>_<config>_build.log`. Supported compilers are `gcc`,
+      `clang`, `msvc`, and `clang-cl` (case-insensitive). The configuration can be any string
+      without underscores. The compiler and config names in the report will match the filenames
+      exactly. For example, `GcC_deBug_build.log` will result in `GcC` as the compiler and `deBug`
+      as the configuration in the report.
+
+  include-clang-tidy-warnings:
+    default: true
+    required: false
+    description: Count clang-tidy warnings too
+
+  add-annotations:
+    default: true
+    required: false
+    description: Add annotations to the build logs if warnings are found
+
+  add-job-summary:
+    default: true
+    required: false
+    description: Show warnings report as job summary
+
+  add-pr-comment:
+    default: true
+    required: false
+    description: Show warnings report as sticky PR comment
+
+  pr-comment-header:
+    default: warnings
+    required: false
+    description: Header to distinguish multiple PR comments
+
+  upload-artifact:
+    default: false
+    required: false
+    description: Upload warnings report as job artifact
+
+  artifact-name:
+    default: WarningsReport
+    required: false
+    description: Name of the warnings report artifact
+
+runs:
+  using: composite
+  steps:
+    - name: Parse build logs and create warnings report
+      shell: pwsh
+      env:
+        BUILD_LOGS: ${{ inputs.build-logs }}
+        INCLUDE_CLANG_TIDY_WARNINGS: ${{ inputs.include-clang-tidy-warnings }}
+        GCC_WARNING_REGEX: 'warning:'
+        CLANG_WARNING_REGEX: 'warning:'
+        MSVC_WARNING_REGEX: 'warning'
+        CLANG_CL_WARNING_REGEX: 'warning'
+        CLANG_TIDY_WARNING_REGEX: 'warning:'
+      run: |
+        $buildLogs = "${{ env.BUILD_LOGS }}".Split("`n")
+        $warningsList = @()
+
+        foreach ($log in $buildLogs) {
+          if ($log -match "^(?<compiler>[^_]+)_(?<config>[^_]+)_build\.log$") {
+            $compiler = $matches['compiler']
+            $config = $matches['config']
+            $logContent = Get-Content $log
+
+            switch ($compiler) {
+              "gcc" { $compilerRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[-.*\]$' }
+              "clang" { $compilerRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[-.*\]$' }
+              "msvc" { $compilerRegex = '^.*\((\d+|\d+,\d+|\d+,\d+,\d+,\d+)\)\s*:\s+warning\s+\w{1,2}\d+\s*:\s*.*$' }
+              "clang-cl" { $compilerRegex = '^.*\(\d+,\d+\):\s+warning:\s+.*\[-.*\]$' }
+              default {
+                Write-Output "Unknown compiler: $compiler"
+                continue
+              }
+            }
+            $clangTidyRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[[^-].*\]$'
+
+            $nWarnings = ($logContent -match $compilerRegex).Count
+            if (${{ env.INCLUDE_CLANG_TIDY_WARNINGS}}) {
+              $nWarnings += ($logContent -match $clangTidyRegex).Count
+            }
+            $warningsList += [PSCustomObject]@{ Compiler = $compiler; Configuration = $config; NWarnings = $nWarnings }
+          }
+        }
+
+        $compilersWithWarnings = $warningsList | Where-Object { $_.NWarnings -gt 0 } | Select-Object -ExpandProperty Compiler -Unique
+        foreach ($compiler in $compilersWithWarnings) {
+          Write-Output "::warning::$compiler found warnings"
+        }
+
+        $report = "## Warnings report`n`n"
+        $report += "| Compiler | Configuration | # Warnings |`n"
+        $report += "|:---------|:--------------|-----------:|`n"
+        foreach ($entry in $warningsList) {
+          $report += "| $($entry.Compiler) | $($entry.Configuration) | $($entry.NWarnings) |`n"
+        }
+        $report | Out-File -FilePath warnings.md -Encoding utf8
+
+    - name: Show warnings report as job summary
+      if: ${{ inputs.add-job-summary }}
+      shell: pwsh
+      run: Get-Content warnings.md > $env:GITHUB_STEP_SUMMARY
+
+    - name: Show warnings report as sticky PR comment
+      if: ${{ inputs.add-pr-comment && github.event_name == 'pull_request' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: ${{ inputs.pr-comment-header }}
+        recreate: true
+        path: warnings.md
+
+    - name: Upload warnings reports as job artifact
+      if: ${{ inputs.upload-artifact }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: warnings.md
