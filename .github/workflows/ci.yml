@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test-ubuntu:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy test build logs
+        run: cp -r .github/data/* .
+
+      - name: Create and show warnings report
+        uses: ./
+        with:
+          build-logs: |
+            GCC_Debug_build.log
+            Clang_Debug_build.log
+            Clang_release_build.log
+          include-clang-tidy-warnings: true
+          add-annotations: true
+          add-job-summary: true
+          add-pr-comment: true
+          pr-comment-header: Ubuntu warnings report
+          upload-artifact: true
+          artifact-name: WarningsReportUbuntu
+
+  test-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy test build logs
+        run: cp -r .github/data/* .
+
+      - name: Create and show warnings report
+        uses: ./
+        with:
+          build-logs: |
+            MSVC_Debug_build.log
+            clang-cl_debug_build.log
+          include-clang-tidy-warnings: true
+          add-annotations: true
+          add-job-summary: true
+          add-pr-comment: true
+          pr-comment-header: Windows warnings report
+          upload-artifact: true
+          artifact-name: WarningsReportWindows
