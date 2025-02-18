@@ -44,8 +44,8 @@ jobs:
         uses: ./
         with:
           build-logs: |
-            MSVC_Debug_build.log
             clang-cl_debug_build.log
+            MSVC_Debug_build.log
           include-clang-tidy-warnings: true
           add-annotations: true
           add-job-summary: true

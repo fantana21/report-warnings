@@ -51,63 +51,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Parse build logs and create warnings report
+    - name: Parse build logs, add annotations and create warnings report
       shell: pwsh
       env:
         BUILD_LOGS: ${{ inputs.build-logs }}
         INCLUDE_CLANG_TIDY_WARNINGS: ${{ inputs.include-clang-tidy-warnings }}
-        GCC_WARNING_REGEX: 'warning:'
-        CLANG_WARNING_REGEX: 'warning:'
-        MSVC_WARNING_REGEX: 'warning'
-        CLANG_CL_WARNING_REGEX: 'warning'
-        CLANG_TIDY_WARNING_REGEX: 'warning:'
-      run: |
-        $buildLogs = "${{ env.BUILD_LOGS }}".Split("`n")
-        $warningsList = @()
-
-        foreach ($log in $buildLogs) {
-          if ($log -match "^(?<compiler>[^_]+)_(?<config>[^_]+)_build\.log$") {
-            $compiler = $matches['compiler']
-            $config = $matches['config']
-            $logContent = Get-Content $log
-
-            $gccRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[-.*\]$'
-            $clangRegex = $gccRegex
-            $msvcRegex = '^.*\((\d+|\d+,\d+|\d+,\d+,\d+,\d+)\)\s*:\s+warning\s+\w{1,2}\d+\s*:\s*.*$'
-            $clangClRegex = '^.*\(\d+,\d+\):\s+warning:\s+.*\[-.*\]$'
-            $clangTidyRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[[^-].*\]$'
-            switch ($compiler) {
-              "gcc" { $compilerRegex = $gccRegex }
-              "clang" { $compilerRegex = $clangRegex }
-              "msvc" { $compilerRegex = $msvcRegex }
-              "clang-cl" { $compilerRegex = $clangClRegex }
-              "clangcl" { $compilerRegex = $clangClRegex }
-              default {
-                Write-Output "Unknown compiler: $compiler"
-                continue
-              }
-            }
-
-            $nWarnings = ($logContent -match $compilerRegex).Count
-            if (${{ env.INCLUDE_CLANG_TIDY_WARNINGS}}) {
-              $nWarnings += ($logContent -match $clangTidyRegex).Count
-            }
-            $warningsList += [PSCustomObject]@{ Compiler = $compiler; Configuration = $config; NWarnings = $nWarnings }
-          }
-        }
-
-        $compilersWithWarnings = $warningsList | Where-Object { $_.NWarnings -gt 0 } | Select-Object -ExpandProperty Compiler -Unique
-        foreach ($compiler in $compilersWithWarnings) {
-          Write-Output "::warning::$compiler found warnings"
-        }
-
-        $report = "## Warnings report`n`n"
-        $report += "| Compiler | Configuration | # Warnings |`n"
-        $report += "|:---------|:--------------|-----------:|`n"
-        foreach ($entry in $warningsList) {
-          $report += "| $($entry.Compiler) | $($entry.Configuration) | $($entry.NWarnings) |`n"
-        }
-        $report | Out-File -FilePath warnings.md -Encoding utf8
+        ADD_ANNOTATIONS: ${{ inputs.add-annotations }}
+      run: .\CreateWarningsReport.ps1
 
     - name: Show warnings report as job summary
       if: ${{ inputs.add-job-summary }}
