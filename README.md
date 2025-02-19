@@ -39,6 +39,41 @@ logs must follow the format: `<compiler>_<config>_build.log`. See the descriptio
 ~~~
 
 
+## Example output
+
+The generated warnings report might look something like this:
+
+**Ubuntu**:
+
+---
+## Warnings report
+
+| Compiler | Configuration | # Warnings |
+|:---------|:--------------|-----------:|
+| GCC | Debug | 3 + 5 |
+| GCC | Release | 3 + 5 |
+| Clang | Debug | 4 + 3 |
+| Clang | Release | 4 + 3 |
+---
+
+**Windows**:
+
+---
+## Warnings report
+
+| Compiler | Configuration | # Warnings |
+|:---------|:--------------|-----------:|
+| clang-cl | Debug | 2 + 0 |
+| clang-cl | Release | 2 + 0 |
+| MSVC | Debug | 2 + 2 |
+| MSVC | Release | 2 + 2 |
+---
+
+The number of warnings is split into compiler warnings and clang-tidy warnings. For
+example, in the first report, there are 3 warnings from the GCC compiler and 5 clang-tidy
+warnings, or 4 warnings from Clang and 3 clang-tidy warnings.
+
+
 ## License
 
 [MIT License](LICENSE)
