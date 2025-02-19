@@ -25,11 +25,13 @@ foreach ($log in $buildLogs) {
             }
         }
 
-        $nWarnings = ($logContent -match $compilerRegex).Count
+        $nCompilerWarnings = ($logContent -match $compilerRegex).Count
+        $nWarnings = $nCompilerWarnings
         if ($env:INCLUDE_CLANG_TIDY_WARNINGS -eq "true") {
-            $nWarnings += ($logContent -match $clangTidyRegex).Count
+            $nClangTidyWarnings = ($logContent -match $clangTidyRegex).Count
+            $nWarnings += $nClangTidyWarnings
         }
-        $warningsList += [PSCustomObject]@{ Compiler = $compiler; Configuration = $config; NWarnings = $nWarnings }
+        $warningsList += [PSCustomObject]@{ Compiler = $compiler; Configuration = $config; NWarnings = $nWarnings; NCompilerWarnings = $nCompilerWarnings; NClangTidyWarnings = $nClangTidyWarnings }
     }
     else {
         Write-Output "Invalid log filename: '$filename'"
@@ -47,6 +49,10 @@ $report = "## Warnings report`n`n"
 $report += "| Compiler | Configuration | # Warnings |`n"
 $report += "|:---------|:--------------|-----------:|`n"
 foreach ($entry in $warningsList) {
-    $report += "| $($entry.Compiler) | $($entry.Configuration) | $($entry.NWarnings) |`n"
+    $report += "| $($entry.Compiler) | $($entry.Configuration) | $($entry.NCompilerWarnings)"
+    if($env:INCLUDE_CLANG_TIDY_WARNINGS -eq "true") {
+        $report += " + $($entry.NClangTidyWarnings)"
+    }
+    $report += " |`n"
 }
 $report | Out-File -FilePath warnings.md -Encoding utf8
