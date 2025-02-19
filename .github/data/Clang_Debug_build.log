@@ -1,0 +1,48 @@
+[1/2] Building CXX object CMakeFiles/CppProjectTemplate_Main.dir/Debug/CppProjectTemplate/Main.cpp.o
+Warning: include-what-you-use reported diagnostics:
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:26: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+   33 |         auto ccc = aaa + bbb;
+      |                        ~ ^~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: warning: unused variable 'ccc' [-Wunused-variable]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~
+
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp should add these lines:
+#include <NamedType/named_type_impl.hpp>             // for NamedType
+#include <NamedType/underlying_functionalities.hpp>  // for operator<<, Addable
+
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp should remove these lines:
+- #include <NamedType/named_type.hpp>  // lines 4-4
+
+The full include-list for /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:
+#include <CppProjectTemplate/Library.hpp>            // for Library
+#include <CppProjectTemplate/Square.hpp>             // for Square
+#include <NamedType/named_type_impl.hpp>             // for NamedType
+#include <NamedType/underlying_functionalities.hpp>  // for operator<<, Addable
+#include <QuantNd/Utility.hpp>                       // for allAreEqual
+#include <iostream>                                  // for basic_ostream
+#include <string>                                    // for allocator, char_...
+---
+
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: warning: Value stored to 'ccc' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~   ~~~~~~~~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: note: Value stored to 'ccc' during its initialization is never read
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~   ~~~~~~~~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: warning: unused variable 'ccc' [clang-diagnostic-unused-variable]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:26: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [clang-diagnostic-sign-conversion]
+   33 |         auto ccc = aaa + bbb;
+      |                        ~ ^~~
+Checking /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp ...
+Checking /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp: MP_UNITS_API_CONTRACTS=2;MP_UNITS_API_STD_FORMAT=0;MP_UNITS_HOSTED=1;CMAKE_INTDIR="Debug";_FORTIFY_SOURCE=3;_GLIBCXX_ASSERTIONS=1...
+../../CppProjectTemplate/Main.cpp:33:26: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+   33 |         auto ccc = aaa + bbb;
+      |                        ~ ^~~
+../../CppProjectTemplate/Main.cpp:33:14: warning: unused variable 'ccc' [-Wunused-variable]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~
+2 warnings generated.
+[2/2] Linking CXX executable Debug/Main

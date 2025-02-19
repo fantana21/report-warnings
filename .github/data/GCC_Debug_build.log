@@ -1,0 +1,46 @@
+[1/8] Building CXX object CMakeFiles/CppProjectTemplate_Library.dir/Debug/CppProjectTemplate/Library.cpp.o
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Library.cpp:12:9: warning: unused variable 'unusedAndUninizialiedVariable' [clang-diagnostic-unused-variable]
+   12 |     int unusedAndUninizialiedVariable;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Library.cpp:12:9: warning: variable 'unusedAndUninizialiedVariable' is not initialized [cppcoreguidelines-init-variables]
+   12 |     int unusedAndUninizialiedVariable;
+      |         ^
+      |                                       = 0
+Checking /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Library.cpp ...
+Checking /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Library.cpp: CMAKE_INTDIR="Debug";_FORTIFY_SOURCE=3;_GLIBCXX_ASSERTIONS=1...
+../../CppProjectTemplate/Library.cpp: In member function ‘std::string Library::Name() const’:
+../../CppProjectTemplate/Library.cpp:12:9: warning: unused variable ‘unusedAndUninizialiedVariable’ [-Wunused-variable]
+   12 |     int unusedAndUninizialiedVariable;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2/8] Linking CXX static library Debug/libCppProjectTemplate_Library.a
+[3/8] Building CXX object Tests/CMakeFiles/CppProjectTemplateTests_Library.dir/Debug/Library.test.cpp.o
+Checking /home/patrick/programming/CppProjectTemplate/Tests/Library.test.cpp ...
+Checking /home/patrick/programming/CppProjectTemplate/Tests/Library.test.cpp: DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN=1;CMAKE_INTDIR="Debug";_FORTIFY_SOURCE=3;_GLIBCXX_ASSERTIONS=1...
+[4/8] Building CXX object Tests/CMakeFiles/CppProjectTemplateTests_Square.dir/Debug/Square.test.cpp.o
+Checking /home/patrick/programming/CppProjectTemplate/Tests/Square.test.cpp ...
+Checking /home/patrick/programming/CppProjectTemplate/Tests/Square.test.cpp: DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN=1;CMAKE_INTDIR="Debug";_FORTIFY_SOURCE=3;_GLIBCXX_ASSERTIONS=1...
+[5/8] Linking CXX executable Tests/Debug/SquareTest
+[6/8] Linking CXX executable Tests/Debug/LibraryTest
+[7/8] Building CXX object CMakeFiles/CppProjectTemplate_Main.dir/Debug/CppProjectTemplate/Main.cpp.o
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: warning: Value stored to 'ccc' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~   ~~~~~~~~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: note: Value stored to 'ccc' during its initialization is never read
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~   ~~~~~~~~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:14: warning: unused variable 'ccc' [clang-diagnostic-unused-variable]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~
+/home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp:33:26: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [clang-diagnostic-sign-conversion]
+   33 |         auto ccc = aaa + bbb;
+      |                        ~ ^~~
+Checking /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp ...
+Checking /home/patrick/programming/CppProjectTemplate/CppProjectTemplate/Main.cpp: MP_UNITS_API_CONTRACTS=2;MP_UNITS_API_STD_FORMAT=0;MP_UNITS_HOSTED=1;CMAKE_INTDIR="Debug";_FORTIFY_SOURCE=3;_GLIBCXX_ASSERTIONS=1...
+../../CppProjectTemplate/Main.cpp: In function ‘int main()’:
+../../CppProjectTemplate/Main.cpp:33:26: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+   33 |         auto ccc = aaa + bbb;
+      |                          ^~~
+../../CppProjectTemplate/Main.cpp:33:14: warning: unused variable ‘ccc’ [-Wunused-variable]
+   33 |         auto ccc = aaa + bbb;
+      |              ^~~
+[8/8] Linking CXX executable Debug/Main
