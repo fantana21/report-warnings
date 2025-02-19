@@ -57,7 +57,7 @@ runs:
         BUILD_LOGS: ${{ inputs.build-logs }}
         INCLUDE_CLANG_TIDY_WARNINGS: ${{ inputs.include-clang-tidy-warnings }}
         ADD_ANNOTATIONS: ${{ inputs.add-annotations }}
-      run: .\CreateWarningsReport.ps1
+      run: '& $env:GITHUB_ACTION_PATH/CreateWarningsReport.ps1'
 
     - name: Show warnings report as job summary
       if: ${{ inputs.add-job-summary }}
