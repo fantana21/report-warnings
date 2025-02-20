@@ -24,12 +24,7 @@ jobs:
             GCC_Debug_build.log
             Clang_Debug_build.log
             Clang_release_build.log
-          include-clang-tidy-warnings: true
-          add-annotations: true
-          add-job-summary: true
-          add-pr-comment: true
           pr-comment-header: Ubuntu warnings report
-          upload-artifact: true
           artifact-name: WarningsReportUbuntu
 
   test-windows:
@@ -46,10 +41,5 @@ jobs:
           build-logs: |
             clang-cl_debug_build.log
             MSVC_Debug_build.log
-          include-clang-tidy-warnings: true
-          add-annotations: true
-          add-job-summary: true
-          add-pr-comment: true
           pr-comment-header: Windows warnings report
-          upload-artifact: true
           artifact-name: WarningsReportWindows

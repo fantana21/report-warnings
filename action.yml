@@ -14,22 +14,22 @@ inputs:
       as the configuration in the report.
 
   include-clang-tidy-warnings:
-    default: true
+    default: 'true'
     required: false
     description: Count clang-tidy warnings too
 
   add-annotations:
-    default: true
+    default: 'true'
     required: false
     description: Add annotations to the build logs if warnings are found
 
   add-job-summary:
-    default: true
+    default: 'true'
     required: false
     description: Show warnings report as job summary
 
   add-pr-comment:
-    default: true
+    default: 'true'
     required: false
     description: Show warnings report as sticky PR comment
 
@@ -39,7 +39,7 @@ inputs:
     description: Header to distinguish multiple PR comments
 
   upload-artifact:
-    default: false
+    default: 'false'
     required: false
     description: Upload warnings report as job artifact
 
@@ -57,15 +57,15 @@ runs:
         BUILD_LOGS: ${{ inputs.build-logs }}
         INCLUDE_CLANG_TIDY_WARNINGS: ${{ inputs.include-clang-tidy-warnings }}
         ADD_ANNOTATIONS: ${{ inputs.add-annotations }}
-      run: .\CreateWarningsReport.ps1
+      run: '& $env:GITHUB_ACTION_PATH/CreateWarningsReport.ps1'
 
     - name: Show warnings report as job summary
-      if: ${{ inputs.add-job-summary }}
+      if: ${{ inputs.add-job-summary == 'true' }}
       shell: pwsh
       run: Get-Content warnings.md > $env:GITHUB_STEP_SUMMARY
 
     - name: Show warnings report as sticky PR comment
-      if: ${{ inputs.add-pr-comment && github.event_name == 'pull_request' }}
+      if: ${{ inputs.add-pr-comment == 'true' && github.event_name == 'pull_request' }}
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         header: ${{ inputs.pr-comment-header }}
@@ -73,7 +73,7 @@ runs:
         path: warnings.md
 
     - name: Upload warnings reports as job artifact
-      if: ${{ inputs.upload-artifact }}
+      if: ${{ inputs.upload-artifact == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.artifact-name }}
