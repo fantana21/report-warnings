@@ -56,4 +56,4 @@ foreach ($entry in $warningsList) {
     }
     $report += " |`n"
 }
-$report | Out-File -FilePath warnings.md -Encoding utf8
+$report | Out-File -FilePath warnings.md -NoNewline
