@@ -1,7 +1,7 @@
 $buildLogs = $env:BUILD_LOGS.Split("`n", [System.StringSplitOptions]::RemoveEmptyEntries)
 $warningsList = @()
 
-foreach ($log in $buildLogs) {
+:Loop foreach ($log in $buildLogs) {
     $filename = [System.IO.Path]::GetFileName($log)
     if ($filename -match "^(?<compiler>[^_]+)_(?<config>[^_]+)_build\.log$") {
         $compiler = $matches['compiler']
@@ -21,7 +21,8 @@ foreach ($log in $buildLogs) {
             "clangcl" { $compilerRegex = $clangClRegex }
             default {
                 Write-Output "Unknown compiler: $compiler"
-                continue
+                # A normal continue statement would just continue the switch, not the foreach
+                continue Loop
             }
         }
 
@@ -55,4 +56,4 @@ foreach ($entry in $warningsList) {
     }
     $report += " |`n"
 }
-$report | Out-File -FilePath warnings.md -Encoding utf8
+$report | Out-File -FilePath warnings.md -NoNewline
