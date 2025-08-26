@@ -1,16 +1,23 @@
+<!--
+SPDX-FileCopyrightText: 2025 Fantana GmbH <https://fantana.at/>
+
+SPDX-License-Identifier: BSL-1.0
+-->
+
 # Report warnings
 
-[![CI badge][1]][2]
+[![CI badge][ci-badge]][ci-page]
 
 This GitHub action parses C++ build logs to count warnings and creates a Markdown report
 from that. If warnings are found an annotation can be shown in the log. Additionally, the
-report can be added to the [job summary][3], shown as a [sticky PR comment][4], and/or be
-uploaded as an artifact. See [action.yml](action.yml) for inputs and other details.
+report can be added to the [job summary][job-summaries], shown as a [sticky PR
+comment][sticky-pr-comment], and/or be uploaded as an artifact. See
+[action.yml](action.yml) for inputs and other details.
 
-[1]: https://github.com/fantana21/report-warnings/actions/workflows/ci.yml/badge.svg
-[2]: https://github.com/fantana21/report-warnings/actions/workflows/ci.yml
-[3]: https://github.blog/news-insights/product-news/supercharging-github-actions-with-job-summaries/
-[4]: https://github.com/marketplace/actions/sticky-pull-request-comment
+[ci-badge]: https://github.com/fantana21/report-warnings/actions/workflows/ci.yml/badge.svg
+[ci-page]: https://github.com/fantana21/report-warnings/actions/workflows/ci.yml
+[job-summaries]: https://github.blog/news-insights/product-news/supercharging-github-actions-with-job-summaries/
+[sticky-pr-comment]: https://github.com/marketplace/actions/sticky-pull-request-comment
 
 
 ## Example usage
@@ -78,4 +85,12 @@ warnings, or 4 warnings from Clang and 3 clang-tidy warnings.
 
 ## Licensing
 
-This project is licensed under the [Boost Software License 1.0](LICENSE).
+This project is licensed under multiple licenses and aims to be
+[REUSE](https://reuse.software/) compliant. For accurate and up-to-date licensing
+information, please check the individual file headers, [`REUSE.toml`](REUSE.toml), and the
+[`LICENSES/`](LICENSES/) directory.
+
+**Overview:**
+
+- Original code: [Boost Software License 1.0](LICENSES/BSL-1.0.txt)
+- CI workflow and data files: [Creative Commons Zero v1.0 Universal](LICENSES/CC0-1.0.txt)

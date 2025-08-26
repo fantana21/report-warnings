@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Fantana GmbH <https://fantana.at/>
+#
+# SPDX-License-Identifier: BSL-1.0
+
 $buildLogPatterns = $env:BUILD_LOGS.Split("`n", [System.StringSplitOptions]::RemoveEmptyEntries)
 $buildLogs = @()
 foreach ($pattern in $buildLogPatterns) {
