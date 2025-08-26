@@ -21,10 +21,8 @@ jobs:
         uses: ./
         with:
           build-logs: |
-            GCC_Debug_build.log
-            Clang_Debug_build.log
-            Clang_release_build.log
-            gcc-14_Release_build.log
+            GCC*.log
+            Clang_*.log
             llvm-19_release_build.log
           pr-comment-header: Ubuntu warnings report
           artifact-name: WarningsReportUbuntu
@@ -41,7 +39,7 @@ jobs:
         uses: ./
         with:
           build-logs: |
-            clang-cl_debug_build.log
-            MSVC_Debug_build.log
+            clang-cl*.log
+            MSVC*.log
           pr-comment-header: Windows warnings report
           artifact-name: WarningsReportWindows

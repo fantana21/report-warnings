@@ -1,6 +1,19 @@
-$buildLogs = $env:BUILD_LOGS.Split("`n", [System.StringSplitOptions]::RemoveEmptyEntries)
-$warningsList = @()
+$buildLogPatterns = $env:BUILD_LOGS.Split("`n", [System.StringSplitOptions]::RemoveEmptyEntries)
+$buildLogs = @()
+foreach ($pattern in $buildLogPatterns) {
+    # Try to expand each pattern to full file paths
+    $expanded = Get-ChildItem -Path $pattern -File -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }
+    if ($expanded.Count -eq 0) {
+        # If no files match the pattern, treat it as a literal file path
+        if (Test-Path $pattern) {
+            $buildLogs += (Resolve-Path $pattern).Path
+        }
+    } else {
+        $buildLogs += $expanded
+    }
+}
 
+$warningsList = @()
 :Loop foreach ($log in $buildLogs) {
     $filename = [System.IO.Path]::GetFileName($log)
     if ($filename -match "^(?<compiler>[^_]+)_(?<config>[^_]+)_build\.log$") {
@@ -20,7 +33,7 @@ $warningsList = @()
             "clang-cl" { $compilerRegex = $clangClRegex }
             "clangcl" { $compilerRegex = $clangClRegex }
             default {
-                Write-Output "Unknown compiler: $compiler"
+                Write-Output "::warning::Unknown compiler: $compiler"
                 # A normal continue statement would just continue the switch, not the foreach
                 continue Loop
             }
@@ -35,7 +48,7 @@ $warningsList = @()
         $warningsList += [PSCustomObject]@{ Compiler = $compiler; Configuration = $config; NWarnings = $nWarnings; NCompilerWarnings = $nCompilerWarnings; NClangTidyWarnings = $nClangTidyWarnings }
     }
     else {
-        Write-Output "Invalid log filename: '$filename'"
+        Write-Output "::warning::Invalid log filename: '$filename'"
     }
 }
 
