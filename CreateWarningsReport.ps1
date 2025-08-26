@@ -33,7 +33,7 @@ $warningsList = @()
             "clang-cl" { $compilerRegex = $clangClRegex }
             "clangcl" { $compilerRegex = $clangClRegex }
             default {
-                Write-Output "Unknown compiler: $compiler"
+                Write-Output "::warning::Unknown compiler: $compiler"
                 # A normal continue statement would just continue the switch, not the foreach
                 continue Loop
             }
@@ -48,7 +48,7 @@ $warningsList = @()
         $warningsList += [PSCustomObject]@{ Compiler = $compiler; Configuration = $config; NWarnings = $nWarnings; NCompilerWarnings = $nCompilerWarnings; NClangTidyWarnings = $nClangTidyWarnings }
     }
     else {
-        Write-Output "Invalid log filename: '$filename'"
+        Write-Output "::warning::Invalid log filename: '$filename'"
     }
 }
 
