@@ -76,6 +76,6 @@ example, in the first report, there are 3 warnings from the GCC compiler and 5 c
 warnings, or 4 warnings from Clang and 3 clang-tidy warnings.
 
 
-## License
+## Licensing
 
-[MIT License](LICENSE)
+This project is licensed under the [Boost Software License 1.0](LICENSE).
