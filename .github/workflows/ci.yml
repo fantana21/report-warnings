@@ -47,3 +47,11 @@ jobs:
             MSVC*.log
           pr-comment-header: Windows warnings report
           artifact-name: WarningsReportWindows
+
+  check-reuse-compliance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check REUSE compliance
+        uses: fsfe/reuse-action@v5
