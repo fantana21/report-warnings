@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Fantana GmbH <https://fantana.at/>
+#
+# SPDX-License-Identifier: BSL-1.0
+
 name: report-warnings
 description: Count warnings and report the results in different formats
 author: Patrick Kappl
