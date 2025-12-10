@@ -17,6 +17,9 @@ foreach ($pattern in $buildLogPatterns) {
     }
 }
 
+# Sort and remove duplicates
+$buildLogs = $buildLogs | Sort-Object -CaseSensitive -Unique
+
 $warningsList = @()
 :Loop foreach ($log in $buildLogs) {
     $filename = [System.IO.Path]::GetFileName($log)
@@ -30,8 +33,8 @@ $warningsList = @()
         $msvcRegex = '^.*\((\d+|\d+,\d+|\d+,\d+,\d+,\d+)\)\s*:\s+warning\s+\w{1,2}\d+\s*:\s*.*$'
         $clangClRegex = '^.*\(\d+,\d+\):\s+warning:\s+.*\[-.*\]$'
         $clangTidyRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[[^-].*\]$'
-        switch ($compiler) {
-            "gcc" { $compilerRegex = $gccRegex }
+        switch -Wildcard ($compiler) {
+            "*gcc" { $compilerRegex = $gccRegex }
             "clang" { $compilerRegex = $clangRegex }
             "msvc" { $compilerRegex = $msvcRegex }
             "clang-cl" { $compilerRegex = $clangClRegex }

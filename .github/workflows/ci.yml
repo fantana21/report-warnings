@@ -28,6 +28,7 @@ jobs:
             GCC*.log
             Clang_*.log
             llvm-19_release_build.log
+            *gcc_*_build.log
           pr-comment-header: Ubuntu warnings report
           artifact-name: WarningsReportUbuntu
 
