@@ -17,6 +17,9 @@ foreach ($pattern in $buildLogPatterns) {
     }
 }
 
+# Sort and remove duplicates
+$buildLogs = $buildLogs | Sort-Object -CaseSensitive -Unique
+
 $warningsList = @()
 :Loop foreach ($log in $buildLogs) {
     $filename = [System.IO.Path]::GetFileName($log)
