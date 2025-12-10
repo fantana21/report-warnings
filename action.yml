@@ -13,10 +13,12 @@ inputs:
       Paths to the build logs. Multiple paths must be separated by newlines. Each path can be a
       file, a directory (all files in the directory will be included), or a wildcard pattern. The
       filenames of the logs must follow the format: `<compiler>_<config>_build.log`. Supported
-      compilers are `gcc`, `clang`, `msvc`, and `clang-cl` (case-insensitive). The configuration can
-      be any string without underscores. The compiler and config names in the report will match the
-      filenames exactly. For example, `GcC_deBug_build.log` will result in `GcC` as the compiler and
-      `deBug` as the configuration in the report.
+      compilers are `gcc`, `clang`, `msvc`, and `clang-cl` (case-insensitive). GCC compilers can
+      have an arbitrary prefix (without underscores) to support cross-compiling toolchains like
+      arm-none-eabi-gcc. The configuration can be any string without underscores. The compiler and
+      config names in the report will match the filenames exactly. For example,
+      `GcC_deBug_build.log` will result in `GcC` as the compiler and `deBug` as the configuration in
+      the report.
 
   include-clang-tidy-warnings:
     default: 'true'

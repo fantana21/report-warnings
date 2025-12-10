@@ -30,8 +30,8 @@ $warningsList = @()
         $msvcRegex = '^.*\((\d+|\d+,\d+|\d+,\d+,\d+,\d+)\)\s*:\s+warning\s+\w{1,2}\d+\s*:\s*.*$'
         $clangClRegex = '^.*\(\d+,\d+\):\s+warning:\s+.*\[-.*\]$'
         $clangTidyRegex = '^.*:\d+:\d+:\s+warning:\s+.*\[[^-].*\]$'
-        switch ($compiler) {
-            "gcc" { $compilerRegex = $gccRegex }
+        switch -Wildcard ($compiler) {
+            "*gcc" { $compilerRegex = $gccRegex }
             "clang" { $compilerRegex = $clangRegex }
             "msvc" { $compilerRegex = $msvcRegex }
             "clang-cl" { $compilerRegex = $clangClRegex }
